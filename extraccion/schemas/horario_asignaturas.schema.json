@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Horario de asignaturas (horario_asignaturas.json)",
+  "description": "Estructura del archivo src/lib/data/horario_asignaturas.json. Anidamiento: sede -> jornada -> periodo -> sigla -> paralelo -> ramo.",
+  "type": "object",
+  "additionalProperties": { "$ref": "#/definitions/jornadas" },
+  "definitions": {
+    "jornadas": {
+      "type": "object",
+      "description": "Claves = jornada (Diurna/Vespertina/A Distancia).",
+      "additionalProperties": { "$ref": "#/definitions/periodos" }
+    },
+    "periodos": {
+      "type": "object",
+      "description": "Claves = periodo académico, formato 'YYYY-S' (ej. '2026-1').",
+      "additionalProperties": { "$ref": "#/definitions/asignaturas" }
+    },
+    "asignaturas": {
+      "type": "object",
+      "description": "Claves = sigla de asignatura (ej. 'MAT021').",
+      "additionalProperties": { "$ref": "#/definitions/paralelos" }
+    },
+    "paralelos": {
+      "type": "object",
+      "description": "Claves = código de paralelo (ej. '1', '2', 'A').",
+      "additionalProperties": { "$ref": "#/definitions/ramo" }
+    },
+    "ramo": {
+      "type": "object",
+      "required": ["nombre", "sigla", "horario", "profesor", "paralelo", "cupo", "departamento"],
+      "additionalProperties": false,
+      "properties": {
+        "nombre": { "type": "string" },
+        "sigla": { "type": "string" },
+        "paralelo": { "type": "string" },
+        "cupo": { "type": "integer", "minimum": 0 },
+        "departamento": { "type": "string" },
+        "profesor": { "type": "array", "items": { "type": "string" } },
+        "horario": { "type": "array", "items": { "$ref": "#/definitions/bloque" } }
+      }
+    },
+    "bloque": {
+      "type": "object",
+      "required": ["bloque", "tipo", "sala", "campus", "profesor", "dia"],
+      "additionalProperties": false,
+      "properties": {
+        "bloque": { "type": "integer", "description": "Número de bloque horario del día." },
+        "tipo": { "type": "string", "description": "Tipo de actividad (Cát, Lab, Ayu, ...)." },
+        "sala": { "type": "string" },
+        "campus": { "type": "string" },
+        "profesor": { "type": "string" },
+        "dia": { "type": "integer", "minimum": 0, "maximum": 6, "description": "0=Lunes .. 6=Domingo (ver resources/modules/utils.py: DIAS)." }
+      }
+    }
+  }
+}

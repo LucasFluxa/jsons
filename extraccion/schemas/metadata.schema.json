@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Metadata de generación (metadata.json)",
+  "description": "Estructura del archivo src/lib/data/metadata.json generado por resources/generar.py.",
+  "type": "object",
+  "required": ["version", "status", "generatedAt", "system", "stats", "files"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "type": "integer" },
+    "status": { "type": "string" },
+    "generatedAt": {
+      "type": "object",
+      "required": ["unix", "iso"],
+      "additionalProperties": false,
+      "properties": {
+        "unix": { "type": "number" },
+        "iso": { "type": "string" }
+      }
+    },
+    "system": {
+      "type": "object",
+      "required": ["scraperVersion", "environment", "executionTimeSeconds"],
+      "additionalProperties": false,
+      "properties": {
+        "scraperVersion": { "type": "string" },
+        "environment": { "type": "string" },
+        "executionTimeSeconds": { "type": "number" }
+      }
+    },
+    "stats": {
+      "type": "object",
+      "required": ["totalAsignaturas", "totalParalelos"],
+      "additionalProperties": false,
+      "properties": {
+        "totalAsignaturas": { "type": "integer" },
+        "totalParalelos": { "type": "integer" }
+      }
+    },
+    "files": {
+      "type": "object",
+      "description": "Registro por archivo generado. Claves = nombre de archivo.",
+      "additionalProperties": { "$ref": "#/definitions/fileEntry" }
+    }
+  },
+  "definitions": {
+    "fileEntry": {
+      "type": "object",
+      "required": ["hash", "updatedAt"],
+      "properties": {
+        "hash": { "type": "string", "description": "MD5 del contenido serializado." },
+        "updatedAt": { "type": "number", "description": "Timestamp unix de última escritura." },
+        "cambiosUltimaEjecucion": { "type": "integer" },
+        "size": { "type": "integer" }
+      }
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Programas académicos (programas_academicos.json)",
+  "description": "Estructura del archivo src/lib/data/programas_academicos.json. Anidamiento: sede -> departamento -> tipo -> sigla -> ramo.",
+  "type": "object",
+  "additionalProperties": { "$ref": "#/definitions/departamentos" },
+  "definitions": {
+    "departamentos": {
+      "type": "object",
+      "description": "Claves = departamento (ej. 'ARQUITECTURA').",
+      "additionalProperties": { "$ref": "#/definitions/tipos" }
+    },
+    "tipos": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "IMPAR": { "$ref": "#/definitions/asignaturas" },
+        "PAR": { "$ref": "#/definitions/asignaturas" },
+        "AMBOS": { "$ref": "#/definitions/asignaturas" },
+        "ELECTIVO": { "$ref": "#/definitions/asignaturas" }
+      }
+    },
+    "asignaturas": {
+      "type": "object",
+      "description": "Claves = sigla de asignatura.",
+      "additionalProperties": { "$ref": "#/definitions/ramoPrograma" }
+    },
+    "ramoPrograma": {
+      "type": "object",
+      "required": ["nombre", "creditos", "programa"],
+      "additionalProperties": false,
+      "properties": {
+        "nombre": { "type": "string" },
+        "creditos": { "type": "string", "description": "Créditos como cadena (el frontend los convierte a int)." },
+        "programa": { "type": "string", "description": "URL del programa o cadena vacía." }
+      }
+    }
+  }
+}

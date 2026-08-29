@@ -1,0 +1,91 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Planes y mallas de carrera (planes_carreras.json)",
+  "description": "Estructura del archivo src/lib/data/planes_carreras.json generado por resources/generar.py. Contiene todas las carreras con sus menciones/especialidades, planes y mallas curriculares.",
+  "type": "array",
+  "items": { "$ref": "#/definitions/carrera" },
+  "definitions": {
+    "carrera": {
+      "type": "object",
+      "required": ["código", "jornada", "menciones/especialidades", "nombre", "sede"],
+      "additionalProperties": false,
+      "properties": {
+        "código": { "type": "string", "description": "Código interno de carrera, ej. '13-1'." },
+        "jornada": { "type": "string", "description": "Jornada: Diurna, Vespertina o A Distancia." },
+        "nombre": { "type": "string" },
+        "sede": { "type": "string" },
+        "menciones/especialidades": {
+          "type": "object",
+          "description": "Mapa mención -> { nombre, planes }. La clave es un índice interno.",
+          "additionalProperties": { "$ref": "#/definitions/mencion" }
+        }
+      }
+    },
+    "mencion": {
+      "type": "object",
+      "required": ["nombre", "planes"],
+      "additionalProperties": false,
+      "properties": {
+        "nombre": { "type": "string" },
+        "planes": {
+          "type": "object",
+          "description": "Mapa plan_id -> { plan, malla }. La CLAVE es el plan_id numérico monotónico; el campo 'plan' es solo la etiqueta visible.",
+          "additionalProperties": { "$ref": "#/definitions/plan" }
+        }
+      }
+    },
+    "plan": {
+      "type": "object",
+      "required": ["plan", "malla"],
+      "additionalProperties": false,
+      "properties": {
+        "plan": { "type": "string", "description": "Etiqueta visible del plan (ej. '7310', '3 (2019)'). NO usar para ordenar." },
+        "malla": { "type": "array", "items": { "$ref": "#/definitions/semestre" } }
+      }
+    },
+    "semestre": {
+      "type": "object",
+      "description": "Un semestre de la malla. Claves = sigla de asignatura, valores = RamoCarrera.",
+      "additionalProperties": { "$ref": "#/definitions/ramoCarrera" }
+    },
+    "ramoCarrera": {
+      "type": "object",
+      "required": ["nombre", "creditos", "departamento", "horas", "requisito_licenciatura", "requisitos", "equivalencias"],
+      "additionalProperties": false,
+      "properties": {
+        "nombre": { "type": "string" },
+        "creditos": { "type": "integer" },
+        "departamento": { "type": "string" },
+        "requisito_licenciatura": { "type": "boolean" },
+        "horas": { "$ref": "#/definitions/horas" },
+        "requisitos": { "type": "array", "items": { "$ref": "#/definitions/grupoRequisitos" } },
+        "equivalencias": { "type": "array", "items": { "$ref": "#/definitions/grupoRequisitos" } }
+      }
+    },
+    "horas": {
+      "type": "object",
+      "required": ["teoricas", "practicas", "laboratorios", "ayudantias"],
+      "additionalProperties": false,
+      "properties": {
+        "teoricas": { "type": "integer", "minimum": 0 },
+        "practicas": { "type": "integer", "minimum": 0 },
+        "laboratorios": { "type": "integer", "minimum": 0 },
+        "ayudantias": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "grupoRequisitos": {
+      "type": "array",
+      "description": "Grupo en forma normal disyuntiva (DNF): elementos dentro de un grupo = Y; grupos distintos = O.",
+      "items": { "$ref": "#/definitions/requisito" }
+    },
+    "requisito": {
+      "type": "object",
+      "required": ["sigla"],
+      "additionalProperties": false,
+      "properties": {
+        "sigla": { "type": "string" },
+        "tipo": { "type": "string", "enum": ["PRE", "CO"] }
+      }
+    }
+  }
+}
