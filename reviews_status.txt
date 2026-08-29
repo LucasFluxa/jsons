@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "enabled": false,
+  "title": "Evaluaciones docentes cerradas",
+  "message": "Las evaluaciones docentes se habilitan solo durante cierres de semestre.",
+  "updatedAt": "2026-07-03T00:00:00Z",
+  "source": "default"
+}
